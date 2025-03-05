@@ -22,16 +22,16 @@ export function Chat({
   selectedChatModel,
   selectedVisibilityType,
   isReadonly,
-  driveFiles,
-  oneDriveFiles
+  Drivefiles,
+  OneDriveFile
 }: {
   id: string;
   initialMessages: Array<Message>;
   selectedChatModel: string;
   selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
-  driveFiles:any;
-  oneDriveFiles:any
+  Drivefiles:any;
+  OneDriveFile:any;
 }) {
   const { mutate } = useSWRConfig();
 
@@ -72,8 +72,8 @@ export function Chat({
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
         <ChatHeader
- Drivefiles={driveFiles}
- OneDriveFile={oneDriveFiles}
+ Drivefiles={Drivefiles}
+ OneDriveFile={OneDriveFile}
 
           chatId={id}
           selectedModelId={selectedChatModel}
