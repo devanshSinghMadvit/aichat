@@ -12,12 +12,15 @@ import { useSidebar } from './ui/sidebar';
 import { memo } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { VisibilityType, VisibilitySelector } from './visibility-selector';
+import { FileSelector } from './file-selector';
 
 function PureChatHeader({
   chatId,
   selectedModelId,
   selectedVisibilityType,
   isReadonly,
+  Drivefiles,
+  OneDriveFile
 }: {
   chatId: string;
   selectedModelId: string;
@@ -54,6 +57,14 @@ function PureChatHeader({
 
       {!isReadonly && (
         <ModelSelector
+          selectedModelId={selectedModelId}
+          className="order-1 md:order-2"
+        />
+      )}
+          {!isReadonly && (
+        <FileSelector
+        Drivefiles={Drivefiles}
+        OneDriveFile={OneDriveFile}
           selectedModelId={selectedModelId}
           className="order-1 md:order-2"
         />
