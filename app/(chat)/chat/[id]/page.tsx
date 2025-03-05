@@ -61,6 +61,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         selectedChatModel={chatModelFromCookie.value}
         selectedVisibilityType={chat.visibility}
         isReadonly={session?.user?.id !== chat.userId}
+        Drivefiles={[]}
+        OneDriveFile={[]}
       />
       <DataStreamHandler id={id} />
     </>
