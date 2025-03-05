@@ -121,7 +121,7 @@ export default async function Page() {
 
   const id = generateUUID();
   const cookieStore = cookies();
-  const modelIdFromCookie = cookieStore.get('chat-model');
+  // const modelIdFromCookie = cookieStore.get('chat-model');
 
   return (
     <>
@@ -129,7 +129,7 @@ export default async function Page() {
         key={id}
         id={id}
         initialMessages={[]}
-        selectedChatModel={modelIdFromCookie?.value || DEFAULT_CHAT_MODEL}
+        selectedChatModel={ DEFAULT_CHAT_MODEL}
         selectedVisibilityType="private"
         isReadonly={false}
         driveFiles={driveFiles}
