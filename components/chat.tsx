@@ -22,8 +22,8 @@ export function Chat({
   selectedChatModel,
   selectedVisibilityType,
   isReadonly,
-  Drivefiles,
-  OneDriveFile
+  driveFiles,
+  oneDriveFiles
 }: {
   id: string;
   initialMessages: Array<Message>;
@@ -70,8 +70,8 @@ export function Chat({
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
         <ChatHeader
- Drivefiles={Drivefiles}
- OneDriveFile={OneDriveFile}
+ Drivefiles={driveFiles}
+ OneDriveFile={oneDriveFiles}
 
           chatId={id}
           selectedModelId={selectedChatModel}

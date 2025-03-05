@@ -6,6 +6,7 @@ import { generateUUID } from '@/lib/utils';
 import { DataStreamHandler } from '@/components/data-stream-handler';
 import { google } from 'googleapis';
 import axios from 'axios';
+
 interface OneDriveFile {
   id: string;
   name: string;
@@ -14,12 +15,12 @@ interface OneDriveFile {
 }
 
 async function getAccessToken(): Promise<string> {
-  const { ONEDRIVE_CLIENT_ID, ONEDRIVE_TENANT_ID,ONEDRIVE_CLIENT_SECRET,  } = process.env;
+  const { ONEDRIVE_CLIENT_ID, ONEDRIVE_TENANT_ID, ONEDRIVE_CLIENT_SECRET } = process.env;
 
   if (!ONEDRIVE_CLIENT_ID || !ONEDRIVE_TENANT_ID || !ONEDRIVE_CLIENT_SECRET) {
     throw new Error('Missing OneDrive credentials in environment variables');
   }
- 
+
   const response = await axios.post(
     `https://login.microsoftonline.com/${ONEDRIVE_TENANT_ID}/oauth2/v2.0/token`,
     new URLSearchParams({
@@ -29,18 +30,17 @@ async function getAccessToken(): Promise<string> {
       grant_type: 'client_credentials',
     })
   );
-  
 
   return response.data.access_token;
 }
 
 async function listOneDriveFiles(folderId: string = 'root'): Promise<OneDriveFile[]> {
-  // const accessToken = await getAccessToken();
   try {
+    const accessToken = await getAccessToken();
     const response = await axios.get(
-      `https://graph.microsoft.com/v1.0/me/drive/items/${process.env.ONEDRIVE_FOLDER_ID}/children`,
+      `https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children`,
       {
-        headers: { Authorization: `Bearer ${process.env.ONEDRIVE_ACCESS_TOKEN}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
       }
     );
     return response.data.value.map((file: any) => ({
@@ -70,7 +70,7 @@ async function listGoogleDriveFiles(folderId: string): Promise<DriveFile[]> {
 
   const auth = new google.auth.JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: process.env.GOOGLE_PRIVATE_KEY,
+    key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
     scopes: ['https://www.googleapis.com/auth/drive.readonly'],
   });
 
@@ -84,7 +84,13 @@ async function listGoogleDriveFiles(folderId: string): Promise<DriveFile[]> {
       q: `'${folderId}' in parents`,
       fields: 'files(id, name, mimeType, webViewLink, createdTime)',
     });
-    return response.data.files || [];
+    return (response.data.files || []).map((file) => ({
+      id: file.id ?? '',
+      name: file.name ?? '',
+      mimeType: file.mimeType ?? '',
+      webViewLink: file.webViewLink ?? '',
+      createdTime: file.createdTime ?? '',
+    }));
   } catch (error: any) {
     console.error('Detailed Google Drive error:', {
       message: error.message,
@@ -96,45 +102,26 @@ async function listGoogleDriveFiles(folderId: string): Promise<DriveFile[]> {
 }
 
 export default async function Page() {
-  let Drivefiles: DriveFile[] = [];
+  let driveFiles: DriveFile[] = [];
   let error: string | null = null;
-  let OneDriveFile: OneDriveFile[] = [];
-  let oneDriveerror: string | null = null;
+  let oneDriveFiles: OneDriveFile[] = [];
+  let oneDriveError: string | null = null;
 
   try {
-    Drivefiles = await listGoogleDriveFiles(process.env.GOOGLE_DRIVE_FOLDER_ID || '');
-  } catch (err) {
+    driveFiles = await listGoogleDriveFiles(process.env.GOOGLE_DRIVE_FOLDER_ID || '');
+  } catch (err: unknown) {
     error = err instanceof Error ? err.message : 'An error occurred';
   }
+  
   try {
-    OneDriveFile = await listOneDriveFiles(process.env.ONEDRIVE_FOLDER_ID || 'root');
-  } catch (err) {
-    oneDriveerror = err instanceof Error ? err.message : 'An error occurred';
+    oneDriveFiles = await listOneDriveFiles(process.env.ONEDRIVE_FOLDER_ID || 'root');
+  } catch (err: unknown) {
+    oneDriveError = err instanceof Error ? err.message : 'An error occurred';
   }
-
 
   const id = generateUUID();
-
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
   const modelIdFromCookie = cookieStore.get('chat-model');
-
-  if (!modelIdFromCookie) {
-    return (
-      <>
-        <Chat
-          key={id}
-          id={id}
-          initialMessages={[]}
-          selectedChatModel={DEFAULT_CHAT_MODEL}
-          selectedVisibilityType="private"
-          isReadonly={false}
-          Drivefiles={Drivefiles}
-          OneDriveFile={OneDriveFile}
-        />
-        <DataStreamHandler id={id} />
-      </>
-    );
-  }
 
   return (
     <>
@@ -142,11 +129,11 @@ export default async function Page() {
         key={id}
         id={id}
         initialMessages={[]}
-        selectedChatModel={modelIdFromCookie.value}
+        selectedChatModel={modelIdFromCookie?.value || DEFAULT_CHAT_MODEL}
         selectedVisibilityType="private"
         isReadonly={false}
-        Drivefiles={Drivefiles}
-        OneDriveFile={OneDriveFile}
+        driveFiles={driveFiles}
+        oneDriveFiles={oneDriveFiles}
       />
       <DataStreamHandler id={id} />
     </>
