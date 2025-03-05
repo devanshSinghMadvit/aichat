@@ -133,7 +133,7 @@ export default async function Page() {
         selectedVisibilityType="private"
         isReadonly={false}
         driveFiles={driveFiles||[]}
-        oneDriveFiles={oneDriveFiles||[]}
+        oneDriveFiles={[]}
       />
       <DataStreamHandler id={id} />
     </>
