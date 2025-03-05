@@ -151,8 +151,8 @@ export default async function Page() {
         selectedChatModel={modelIdFromCookie.value}
         selectedVisibilityType="private"
         isReadonly={false}
-        Drivefiles={Drivefiles}
-        OneDriveFile={OneDriveFile}
+        Drivefiles={Drivefiles||[]}
+        OneDriveFile={OneDriveFile||[]}
       />
       <DataStreamHandler id={id} />
     </>
