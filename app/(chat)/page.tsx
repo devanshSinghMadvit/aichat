@@ -36,11 +36,11 @@ async function getAccessToken(): Promise<string> {
 
 async function listOneDriveFiles(folderId: string = 'root'): Promise<OneDriveFile[]> {
   try {
-    const accessToken = await getAccessToken();
+    // const accessToken = await getAccessToken();
     const response = await axios.get(
-      `https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children`,
+      `https://graph.microsoft.com/v1.0/me/drive/items/${process.env.ONEDRIVE_FOLDER_ID}/children`,
       {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${process.env.ONEDRIVE_ACCESS_TOKEN}` },
       }
     );
     return response.data.value.map((file: any) => ({
@@ -132,8 +132,8 @@ export default async function Page() {
         selectedChatModel={ DEFAULT_CHAT_MODEL}
         selectedVisibilityType="private"
         isReadonly={false}
-        driveFiles={driveFiles}
-        oneDriveFiles={oneDriveFiles}
+        driveFiles={driveFiles||[]}
+        oneDriveFiles={oneDriveFiles||[]}
       />
       <DataStreamHandler id={id} />
     </>
