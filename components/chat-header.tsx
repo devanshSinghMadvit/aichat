@@ -26,6 +26,8 @@ function PureChatHeader({
   selectedModelId: string;
   selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
+  Drivefiles:any;
+  OneDriveFile:any;
 }) {
   const router = useRouter();
   const { open } = useSidebar();

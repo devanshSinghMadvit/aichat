@@ -21,6 +21,8 @@ export function FileSelector({
   OneDriveFile
 }: {
   selectedModelId: string;
+  Drivefiles:any;
+  OneDriveFile:any;
 } & React.ComponentProps<typeof Button>) {
   
   const [open, setOpen] = useState(false);
@@ -48,7 +50,7 @@ export function FileSelector({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="min-w-[300px]">
         Google Drive
-        {Drivefiles.map((chatModel) => {
+        {Drivefiles.map((chatModel:any) => {
           const { id } = chatModel;
 
           return (
@@ -79,7 +81,7 @@ export function FileSelector({
           );
         })}
           OneDrive
-        {OneDriveFile.map((chatModel) => {
+        {OneDriveFile.map((chatModel:any) => {
           const { id } = chatModel;
 
           return (

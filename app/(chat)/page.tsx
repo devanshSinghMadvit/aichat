@@ -102,7 +102,7 @@ async function listGoogleDriveFiles(folderId: string): Promise<DriveFile[]> {
 }
 
 export default async function Page() {
-  let driveFiles: DriveFile[] = [];
+  let driveFiles: any = [];
   let error: string | null = null;
   let oneDriveFiles: OneDriveFile[] = [];
   let oneDriveError: string | null = null;

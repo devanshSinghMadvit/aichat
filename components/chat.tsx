@@ -30,6 +30,8 @@ export function Chat({
   selectedChatModel: string;
   selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
+  driveFiles:any;
+  oneDriveFiles:any
 }) {
   const { mutate } = useSWRConfig();
 
