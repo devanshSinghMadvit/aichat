@@ -134,8 +134,8 @@ export default async function Page() {
           selectedChatModel={DEFAULT_CHAT_MODEL}
           selectedVisibilityType="private"
           isReadonly={false}
-          Drivefiles={Drivefiles}
-          OneDriveFile={OneDriveFile}
+          Drivefiles={Drivefiles||[]}
+          OneDriveFile={OneDriveFile||[]}
         />
         <DataStreamHandler id={id} />
       </>
