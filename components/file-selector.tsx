@@ -42,7 +42,7 @@ export function FileSelector({
         )}
       >
         <Button variant="outline" className="md:px-2 md:h-[34px]">
-          {selectedChatModel?.name}
+          Drive Files
           <ChevronDownIcon />
         </Button>
       </DropdownMenuTrigger>

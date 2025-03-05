@@ -35,7 +35,7 @@ async function getAccessToken(): Promise<string> {
 }
 
 async function listOneDriveFiles(folderId: string = 'root'): Promise<OneDriveFile[]> {
-  const accessToken = await getAccessToken();
+  // const accessToken = await getAccessToken();
   try {
     const response = await axios.get(
       `https://graph.microsoft.com/v1.0/me/drive/items/${process.env.ONEDRIVE_FOLDER_ID}/children`,
@@ -129,6 +129,7 @@ export default async function Page() {
           selectedVisibilityType="private"
           isReadonly={false}
           Drivefiles={Drivefiles}
+          OneDriveFile={OneDriveFile}
         />
         <DataStreamHandler id={id} />
       </>
